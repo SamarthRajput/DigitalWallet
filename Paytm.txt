@@ -1,0 +1,27 @@
+we needs 2 frontends
+1. for the user 
+2. for the merchant
+
+User can withdraw money, deposit money, see there recent transactions and transfer money to there friends
+Merchant can see how much money is coming into there shop every month, or every day and transactions
+
+These external services are not very reliable, HDFC server you can't assume to be very reliable. we cant just assume sending money to hdfc bank will be easy by
+just calling an api https://api.hdfcbank.com/transfer/harkirat/1000, banks have very high latency, you have to track this transfer very heavily, has it reached the bank or not
+and the same happens in the crypto exchange  
+Thats why a paytm like application and a cryptoexchange like binance are similar because the way you architect the system is assuming people are going to send money, spend money, withdraw money from an 
+external highly unreliable service thats why are the architecture fairly similar 
+
+We want our primary application that will scale up and down, will have a lot of traffic to be different, deployed differently 
+We want our webhook backend or bank api service that is talking directly to the banks to be different, it will have multiple end points , 1 for hdfc bank that the hdfc bank api will hit and similarly if there is a axis bank, it will hit its api so on and so forth.
+
+There will be an application logic on the endpoint in the webhook backend that will add a purchase to the database, thats why we need a webhook server 
+we need our webhook server be always up at all times that why we deploy it separately 
+
+We will be sending money here to hdfc bank or hitting an api Whenever the user request for the withdraw, there is the withdraw option, if they click on the withdraw option 
+they have the option of sending there wallet balance back to hdfc or whatever bank they want, when that happens we need to hit HDFC bank server 
+
+If a user comes to your website and asks to withdraw money then you can hit the hdfc bank server, if it responds back it 10s ki bhai transfer is done we can tell the end user transfer is done
+we can debit the amount from there account/our website wallet or if we dont want to give them a back a bad experience, if they ask for some transfer and you are hitting hdfc bank and hdfc bank is down and we want to keep retrying it then we need another service
+called withdraw service whos job is simple ki bhai if someone is asked for the withdrawal, then is withdrawal request will sit in a queue,
+We need to make sure ke if people are asking for withdrawals and very quickly clicking the withdraw button, you process them sequentially, you hit the bank server,if it says transfer is done you come back, you subtract there wallet balance
+then you pick the next item for that user, never parallely request or parallely process 2 withdrawal request for the same user.
