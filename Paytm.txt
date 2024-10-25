@@ -25,3 +25,34 @@ we can debit the amount from there account/our website wallet or if we dont want
 called withdraw service whos job is simple ki bhai if someone is asked for the withdrawal, then is withdrawal request will sit in a queue,
 We need to make sure ke if people are asking for withdrawals and very quickly clicking the withdraw button, you process them sequentially, you hit the bank server,if it says transfer is done you come back, you subtract there wallet balance
 then you pick the next item for that user, never parallely request or parallely process 2 withdrawal request for the same user.
+
+
+If you want to build zerodha or a normal broker as well then also we need on ramping, on ramping is a commonly used term/thing that we need if you want to build any financial application
+where you want to accept money from a bank, this becomes slighly easier if you are using something called razorpay or stripe they made all of this very easy 
+Whenever you are writing a webhook since it exposed over the internet, who ever is calling this webhook you need to share a password with them so that you are able to validate ki the request is actually coming from them.
+then you can also do a ip based blocking
+
+the merchant-application that people like swiggy will use, or your dukaan dar or shopkeeper will use Whenever they are accepting payments via paytm
+the user-application which is the core paytm application that end user use 
+
+export const GET = handler;
+export const POST = handler;
+these both is same as 
+export { handler as GET, handler as POST }
+
+bcrypt.hash lets you convert the password into a hash so that to prevent you putting plane text passwords, you hash them 
+bcrypt.hash will always give you the new hash, its not neccessary ki if you hash 123456 the output will be same, could be different outputs 
+even the hashes are different bcrypt.compare returned a true when we compare the database hashed password and user input hashed password, it was able to compare
+ki han the original thing from which these 2 were created is the same 
+
+We will create bank webhook handler which will hit our dummy bank server as we are not connecting to the hdfc bank right now 
+As a paytm developer we only have to build the webhook server that hdfc bank will hit and whenever the user is on your website we need to show them a button ki bhai select your bank
+when they click on submit we need to redirect them to nextbanking.hdfc.com another frontend, you dont have to write all of the dummy bank logic 
+
+Create a new folder in apps called bank-webhook
+Whenever the person comes to the website and clicks on the button you should make a database entry ki bhai onRampTransaction has been started with the status pending and then whenever
+the webhook gets hit you should update this status to either success or failure 
+
+transactions was different when we are doing paytm before, that was for different type of transaction, that was for when you are increasing the balance of one person 
+and decreasing the balance for other user this is something else, this ki you want balance update and onramp transaction happens together, if either one of fails then you tell paytm 
+ke bro i have not increase the balance, i have not added a transaction success pls refund the money 
