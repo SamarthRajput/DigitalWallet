@@ -29,6 +29,19 @@ then you pick the next item for that user, never parallely request or parallely 
 
 If you want to build zerodha or a normal broker as well then also we need on ramping, on ramping is a commonly used term/thing that we need if you want to build any financial application
 where you want to accept money from a bank, this becomes slighly easier if you are using something called razorpay or stripe they made all of this very easy 
+
+Whenever you go to zerodha, and you select i pay rs 2000 via netbanking, what happens is zerodha first tells hfdc bank my userId: 1 wanting to spend amount: 2000, you tell hdfc i am going send someone pls charge them 2000rs and let me know when you charged them 
+so that i can do +2000 here on there wallet, also pls send that 2000rs to my zerodha bank account, it isnt neccessary, the accumulating bank account of zerodha is in hdfc it could be in kotak
+So the first thing that zerodha does when you select hdfc bank, is tells hdfc bank ki bhai i want to initiate a transaction for this user of my database (userId : 1 of my database) for this amount and hdfc says okay here is a token which you should send the user to when you are
+sending them to netbanking.hdfcbank.com
+The second thing hdfc bank does is it tells the zerodha backend server, ki bhai payment was done on our side, we have taken 2000 rs from user with id 1 and we will send it to you eventually pls do +200
+this final thing that you call over here is whats called a webhook, ki bhai zerodha has a webhook or an api endpoint (internal.zerodha.com/hdfc) that hdfc can send a request to tell zerodha ki bro userid:1 has paid rs2000 pls add them to your balance
+and thats how financial application talks to the bank.
+
+What does not happen is, what you might think happens but doesnot happen is, ki you know user is on netbanking page and when they succeed with the netbanking payment, they dont get redirect to first the make my trip frontend and then the frontend doesnt tell the backend ki han the payment has been done 
+when the user is on the netbanking page, the hdfc server directly tells the backend ki han payment has been done, hdfc server talks to the backend, makemytrip frontend doesnt talk to this backend bcz if makemytrip frontend talk to the backend, 
+that means the user can always send this request a modified request ki bhai i paid rs 1 lakh or something like that to the server and the backend will be like okay.
+
 Whenever you are writing a webhook since it exposed over the internet, who ever is calling this webhook you need to share a password with them so that you are able to validate ki the request is actually coming from them.
 then you can also do a ip based blocking
 
@@ -45,14 +58,28 @@ bcrypt.hash will always give you the new hash, its not neccessary ki if you hash
 even the hashes are different bcrypt.compare returned a true when we compare the database hashed password and user input hashed password, it was able to compare
 ki han the original thing from which these 2 were created is the same 
 
+we want the landing page, the first page that the users sees, is this transfer page, so we need to support a netbanking option here, allow the user to select hdfc bank click on submit, send the user to a dummy hdfc bank page
+and assume that the payment succeeds create the webhook server 
+
 We will create bank webhook handler which will hit our dummy bank server as we are not connecting to the hdfc bank right now 
 As a paytm developer we only have to build the webhook server that hdfc bank will hit and whenever the user is on your website we need to show them a button ki bhai select your bank
 when they click on submit we need to redirect them to nextbanking.hdfc.com another frontend, you dont have to write all of the dummy bank logic 
 
-Create a new folder in apps called bank-webhook
+Create a new folder in apps called bank-webhook, since our webhook server is just going to be an express server we just need to install express 
 Whenever the person comes to the website and clicks on the button you should make a database entry ki bhai onRampTransaction has been started with the status pending and then whenever
 the webhook gets hit you should update this status to either success or failure 
 
 transactions was different when we are doing paytm before, that was for different type of transaction, that was for when you are increasing the balance of one person 
 and decreasing the balance for other user this is something else, this ki you want balance update and onramp transaction happens together, if either one of fails then you tell paytm 
 ke bro i have not increase the balance, i have not added a transaction success pls refund the money 
+
+If you ever think of doing a startup and building something like razorpay, even the folks at razorpay build there complete stack before raising funds by creating a dummy bank server and showed the investors
+ki dekho we have a dummy bank server through which every things work. If you want banking apis you need to have 25cr in a bank account 
+
+the balances table is the very simple table that you should just have initially added, we added this in original paytm project as well which will store 
+ki bhai this userId has this much amount in there current wallet, relationship ki bhai this specific balance is for this specific user is what the schema of the balances table 
+The other thing we should do is, ki whenever user signups we should put an entry in the balances table with a balance = 0, so you know user has only one entry in the balances table 
+as we can see the userId is unique, toh every user should have an entry over here, so whenever the users signups we should put a balances entry for that user 
+
+model OnRampTransaction, the entry is inserted when you are on the front page and click on the button called i want to paym via netbanking, this is updated to success or failure 
+whenever hdfc bank hits your express server 
