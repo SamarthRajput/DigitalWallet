@@ -4,6 +4,7 @@ import express from "express";
 const app = express();
 // TODO: add zod validation here 
 // TODO: check if this request actually came from hdfc bank, use a webhook secret here  
+// TODO: Check if this OnRampTxn is processing or not, only if it is processing should you increase the balance else you shouldn't
 
 // this the endpoint that hdfc bank will hit, whenever my user pays hdfc bank some money and hdfc bank transfer that money over to my bank, and tells me ki bro transfer is done
 // pls put 1000 rs in there wallet balance

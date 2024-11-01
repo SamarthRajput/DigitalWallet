@@ -27,3 +27,20 @@ this will called on button click, it will not able to connect to the database we
 server action is a function that we use both on frontend and backend as well.
 
 Starting bankwebhook service, which is listening to requests from banks, whenever the user goes to a bank and does the successful transaction, the bank server will hit the bankwebhook server 
+
+We are creating a transaction, ki bhai this transaction will do 4 things either all 4 will happen or none will happen, we cannot partially execute a transaction that is what a property of a transaction is 
+We need to make sure only 1 database call can access or update the amount at a time, not multiple updates can happen at the same time 
+if 1 person is fetching the users balance another person should not be able to fetch the users balance
+
+Approach for this problem is you do locking at the database level, you say ki whenever a request come it will first tell the database ke bhai this row is locked
+I am right now dealing with this row dont let anyone read from this row, dont let anyone write from this row make them wait, so if multiple other requests came they will wait until the first transaction is completed 
+and only then the second request will be able to read from the database, until then the second request wont be able to read anything from the database, that is what locking lets you do 
+
+Locking database lets you lock a specific row, multiple rows the whole database totally depends on you 
+we are using "FOR UPDATE" query for locking database, whenever you select a certain amount of a rows FOR UPDATE you lock those rows 
+so now until the first request succeeds on one can read or write from those rows 
+unfortunately prisma doesnot support locks out of box which is why we have to send a raw SQL Query directly which currently seems SQL injectable 
+
+In mongodb, if you are doing a transaction very similar to this, if you are doing a bunch of queries together wrapped in a transaction and while the transaction hasnt happened, while some requests are happening
+another person does something similar, make some changes mongodb revert transaction
+postgres doesnt do this thats why we dont have to do any locking in the mongodb
