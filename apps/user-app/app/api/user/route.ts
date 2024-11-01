@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { authOptions } from "../../../lib/auth";
+import { authOptions } from "../../lib/auth";
 
 // Api route that shows you whether or not the user is logged in 
 // so if we look at the logic it says export GET function which gets the current session from nextauth which means is the person logged in 

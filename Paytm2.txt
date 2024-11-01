@@ -1,0 +1,29 @@
+We need time series databases, time scale db is a famous one, that lets you store time series data.
+The reason you need a time series database is whenever you have a chart like share market graph, you allow
+the user to come to your website and select 1 month, 1 week, 3 months, 6 months, 1 year you have some time lines to support
+toh its a good idea to catch there 1 month performance, there 3 months performance, there 6 months performance in a database which is why its a good idea 
+to use time series database 
+
+Seeding a database means ki when the users starts the application, there database is completely empty, 
+there are a bunch of tables, but there is no data in the users table, there is no data in the balances table
+so its a good idea to seed some data in there, to put some dummy data in there, so that whenever the users starts the application
+they are able to go to the website, visit it and signup/signin, do a bunch of things
+To do it in prisma create a prisma/seed.ts file 
+so common file that you create to seed data
+upsert means either insert or if the entry already exists for this specific number, then update that entry because we might run it again and again 
+and we will face errors if you just do a create over here, because first time it is created, second time it will give you a conflict, the user with this number already exists 
+which is why prisma.user.upsert, upsert means create or update, if it is already there then update, if it is not there then insert 
+
+We dont store decimals in databases, in a financial application which is why i havent stored 20 because if the user has 20.2 rupees now i can just store 2020 vs storing 20.20 is a big no no in a financial application
+due to precision issues, it might happen that whenever you get this entry you might get 20.199999 like this and then you know some user is missing some money which is not great 
+
+OnRamp means you are ramping money from a bank account to your wallet, this is what called onramping 
+For an application like this you want to allow the user to put in an amount select up netbanking, card like these and whenever they select it click on add money
+they should be taken to axisbank.com, they should finish there transactions there and axisbank should tell us ke bhai they have submitted 200 rs pls credit there money to there account
+
+Action is just another way for you to define a function that can be called either on a client or a server, for all partical purposes assume ki it is similar to creating an http endpoint 
+bcz in the end it does work via http, when creating a server action use "use server" at the top so that the frontend knows ki the OnRapTransaction exists on the server, this needs to be called on the server, if we dont add use server
+this will called on button click, it will not able to connect to the database we probably see an error, make sure you have "use server" on every action you create
+server action is a function that we use both on frontend and backend as well.
+
+Starting bankwebhook service, which is listening to requests from banks, whenever the user goes to a bank and does the successful transaction, the bank server will hit the bankwebhook server 

@@ -35,7 +35,7 @@ export const authOptions = {
                             // toString() => Returns a string representation of an object.
                             id: existingUser.id.toString(),
                             name: existingUser.name,
-                            email: existingUser.email
+                            email: existingUser.email,
                         }
                     }
                     return null;

@@ -22,6 +22,7 @@ export const OnRampTransaction = ({
 
     return <Card title="Recent Transactions">
         <div className="pt-2">
+            {/* add a unique "key" prop */}
             {transactions.map((t) => <div className="flex justify-between">
                 <div>
                     <div className="text-sm">
