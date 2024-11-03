@@ -50,3 +50,10 @@ command -> cp ./docker/Dockerfile.user ./Dockerfile, we will eventually delete t
 so now we can run docker build command to build the image  
 Building docker image command -> docker build -t name_of_image .
 this will containerize my application, it will create an image for me that i can run locally without installing nodejs everything happens inside a container
+
+Elastic beanstalk helps in autoscaling the application
+ECR => Elastic container registry
+ECS => Elastic container service  ->  lets you autoscale docker containers
+ASG => autoscaling groups
+GCP Cloud run => google cloud platform
+Iac => Infrastructure as code
