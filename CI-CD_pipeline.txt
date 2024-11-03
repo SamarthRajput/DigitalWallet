@@ -30,3 +30,23 @@ Now the jobs that you have to run, we have to run a single a job, a build job, w
 If your yml file is little malformed, your workflow wont run it will be very hard for you to debug, so make sure yml file is correctly linted 
 the steps the yml file performs is, clones the repositry, installs nodejs on the machine, runs npm install and finally runs npm run build 
 if npm run build succeeds then your pr will get a green tick, if not then it will fail 
+
+Usually people add another workflow for checking whether or not the tests are succeeded, add another workflow for checking whether or not the coverage increases or remains the same 
+if your test coverage, the number of files that you are testing are covering or number of lines of code your test are covering, if they go down the pull request gets fails 
+
+Continous Deployment
+firstly we dockerize our application, for that we need to create separate docker files for all 3 of these apps, we cannot create a single docker file for everyone and we cannot start 3 processes on different ports in a single docker file 
+so you need to create multiple docker files 
+General way to create is, create a root folder docker and inside this you add various dockerfiles 
+to dockerize a nextjs application it is very similar to a nodejs application 
+
+In the past, we used to copy over the files and then run npm install and then copy over the rest of the files, why are you copying over everything, and then running npm install ?
+because we are using a monorepo, unfortunately if you are using a monorepo your apps folder will have there own package.json, your packages folder will have there own package.jsons, so you can write very complicated script 
+first, bringing all package.jsons then running npm install and then copying the rests of the things, you probably should do it, bcz of the benefit to decrease the build time by pushing up the docker layers 
+This is how we containerize our application
+Building the docker file, 1st the dockerfile should be present in our root folder called Dockerfile 
+We are copying ./docker/Dockerfile.user over to root folder in the .Dockerfile
+command -> cp ./docker/Dockerfile.user ./Dockerfile, we will eventually delete the root .Dockerfile because we have multiple applications they will each have there own docker file, we donot want to put a singleone in the root folder 
+so now we can run docker build command to build the image  
+Building docker image command -> docker build -t name_of_image .
+this will containerize my application, it will create an image for me that i can run locally without installing nodejs everything happens inside a container
