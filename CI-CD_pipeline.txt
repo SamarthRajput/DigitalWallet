@@ -1,0 +1,32 @@
+CI -> Continous Integration
+CD -> Continous Deployment
+as the name suggests are the process of continously integrating your code on github
+In a repositry with so many people collaborating, it is a good idea ki every commit is checked and even before people commit, we should ki what every changes they have made are they following the code practices 
+are the tests still running, is the code linted well 
+Making sure ki before people push anything the maintainer can just run a workflow and see ki whatever changes they have made are they following a certain code practices or not 
+CD is deploying it automatically from github to wherever you have hosted your codebase, so any time a commit is happening on the main branch, it automatically deploys to an EC2 instance lets say
+
+We can do some optimisations in monorepo, ki if you are deploying your nextjs application, you do not have to build your merchant app or your express app if you are just deploying 1 app
+if you have 3 applications and you are only deploying 1, you donot have to build the other 2 that is one optimisation you can do.
+we can also add turbo build cache but we are not doing this 
+
+Anytime someone is trying to merge into my repositry, create a pull request, I should run a workflow that makes sure, ki the code that they are pushing in is building correctly at the very least, there is no error in the code 
+that is making the code not build, so for that you can add your very first CI pipeline 
+Anytime someone creates a pull request, do a check and what to do inside the check both of these things need to be defined, somewhere in your repositry and if your are using github 
+the place where they are defined is the .github folder 
+Anytime you open a repositry and see a .github folder it means it has all of your workflows 
+So if you ever create a folder called .github/workflows in your repositry and add a .yml file over there, it is very similar to the json file 
+
+Anytime a pullrequest runs on any branch, then you should run this Continous Integration job, which will run on an ubuntu machine and 
+1. Clone the repositry on that ubuntu machine, we usually use actions that other people have created, the actions helps us cloning the repo easily on the ubuntu machine 
+and rests of the steps we are running ourselves.
+
+As the repositry builds correctly now we need to make sure, anyone that is creating a pull request also after they changes, the repositry builds correctly
+1st step: creating the yml file that you will push to github in the .github/workflows folder so that github knows it needs to runs a workflow
+We give it a name, when should this run, it should run, whenever a pull request is made on any codebase but on the main or master branch we can give the name of the branch 
+if someone creates a pull request to any different branch dont run this workflow, if someone creates a pull request on the main or master branch then run this workflow
+we add more branches like master, dev 
+Now the jobs that you have to run, we have to run a single a job, a build job, we can give it a name, runs-on and the steps you follow 
+If your yml file is little malformed, your workflow wont run it will be very hard for you to debug, so make sure yml file is correctly linted 
+the steps the yml file performs is, clones the repositry, installs nodejs on the machine, runs npm install and finally runs npm run build 
+if npm run build succeeds then your pr will get a green tick, if not then it will fail 
