@@ -28,7 +28,7 @@ export async function p2pTransfer(to: string, amount: number){
 
     // if the sender and receiver both are present in the database
     // the transaction will take care ki all 4 operations gets successful, if anyone gets fails the whole transactions gets failed 
-    await prisma.$transaction(async (txn) => {
+    await prisma.$transaction(async (txn: any) => {
         // locking the row in the database, so that no other request can read or write to the database at the same time 
         await txn.$queryRaw`SELECT * FROM "Balance" WHERE "userId" = ${Number(from)} FOR UPDATE`
         const fromBalance = await txn.balance.findUnique({
