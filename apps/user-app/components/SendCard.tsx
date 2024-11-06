@@ -7,6 +7,7 @@ import { TextInput } from "@repo/ui/text-input"
 import { useState } from "react"
 import { p2pTransfer } from "../app/lib/actions/p2pTransfer"
 
+
 export function SendCard() {
 
     const [number, setNumber] = useState("");
@@ -26,6 +27,7 @@ export function SendCard() {
                     <div className="pt-4 flex justify-center">
                         <Button onClick={async () => {
                             await p2pTransfer(number, (Number(amount) * 100))
+                            
                         }}>
                             Send 
                         </Button>

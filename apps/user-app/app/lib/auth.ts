@@ -9,7 +9,7 @@ export const authOptions = {
             name: "Credentials",
             // the significance of credentials is what all inputs do you want 
             credentials: {
-                email: { label: "Email", type: "text", placeholder: "example@gmail.com", required: true },
+                number: { label: "Phone Number", type: "text", placeholder: "1111111111", required: true },
                 password: { label: "Password", type: "password", required: true }
             },
             // authorize is the most imp thing, authorize is the function that gets called anytime we click on submit or click on Sign in with Credentials
@@ -23,7 +23,7 @@ export const authOptions = {
                 const hashedPassword = await bcrypt.hash(credentials.password, 10); 
                 const existingUser = await prisma.user.findUnique({
                     where: {
-                        email: credentials.email
+                        number: credentials.number
                     }
                 });
                 console.log(existingUser);
@@ -35,7 +35,7 @@ export const authOptions = {
                             // toString() => Returns a string representation of an object.
                             id: existingUser.id.toString(),
                             name: existingUser.name,
-                            email: existingUser.email,
+                            number: existingUser.number,
                         }
                     }
                     return null;
@@ -45,7 +45,7 @@ export const authOptions = {
                 try{
                     const user = await prisma.user.create({
                         data: {
-                            email: credentials.email,
+                            number: credentials.number,
                             password: hashedPassword
                         }
                     });
@@ -54,7 +54,7 @@ export const authOptions = {
                     return {
                         id: user.id.toString(),
                         name: user.name,
-                        email: user.email
+                        number: user.number
                     }
                 }
                 catch(e){

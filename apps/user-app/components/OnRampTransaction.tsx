@@ -20,13 +20,22 @@ export const OnRampTransaction = ({
         </Card>
     }
 
+
     return <Card title="Recent Transactions">
         <div className="pt-2">
             {/* add a unique "key" prop */}
             {transactions.map((t) => <div className="flex justify-between">
                 <div>
                     <div className="text-sm">
-                        Received INR
+                        {t.status === 'Success' ? (
+                            <>
+                                Recieved INR
+                            </>
+                        ) : (
+                            <>
+                                Processing
+                            </>
+                        ) }
                     </div>
                     <div className="text-slate-600 text-xs">
                         {/* toDateString() -> Returns a date as a string value. */}

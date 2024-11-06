@@ -6,11 +6,11 @@ async function main(){
     const alice = await prisma.user.upsert({
         // so there is a dummy entry for the user with this email 
         where: {
-            email: "testuser@gmail.com"
+            number: "1111111111"
         },
         update: {},
         create: {
-            email: "testuser@gmail.com",
+            number: "1111111111",
             // with password 123456
             password: await bcrypt.hash('123456', 10),
             name: "Alice",
@@ -35,10 +35,10 @@ async function main(){
     })
 
     const bob = await prisma.user.upsert({
-        where: { email: "testuser2@gmail.com"},
+        where: { number: "2222222222" },
         update:{},
         create: {
-            email: "testuser2@gmail.com",
+            number: "2222222222",
             // with password 123123
             password: await bcrypt.hash('123123', 10),
             name: "Bob",

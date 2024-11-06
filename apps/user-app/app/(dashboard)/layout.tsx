@@ -16,8 +16,8 @@ export default function Layout({
                     <div>
                         <SidebarItem href={"/dashboard"} title="Home" icon={<HomeIcon />} />
                         <SidebarItem href={"/transfer"} title="Transfer" icon={<TransferIcon />} />
-                        <SidebarItem href={"/transactions"} title="Transactions" icon={<TransactionIcon />}/>
                         <SidebarItem href={"/p2p"} title="P2P Transfer" icon={<P2PTransferIcon />} />
+                        <SidebarItem href={"/transactions"} title="Transactions" icon={<TransactionIcon />}/>
                     </div>
                 </div>
                 {children}
